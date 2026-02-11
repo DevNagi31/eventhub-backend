@@ -19,7 +19,7 @@
     "axios": "^1.4.0",
     "cheerio": "^1.0.0-rc.12",
     "redis": "^4.6.7",
-    "faktory-worker": "^5.0.0"
+    "node-cron": "^3.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
