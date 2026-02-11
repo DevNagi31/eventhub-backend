@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { testConnection } from './config/database.js';
+import { connectRedis } from './config/redis.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import eventRoutes from './routes/events.js';
@@ -86,6 +87,7 @@ httpServer.listen(PORT, async () => {
   console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
   
   await testConnection();
+  await connectRedis(); // Optional - won't crash if fails
   scheduler.start();
 });
 
