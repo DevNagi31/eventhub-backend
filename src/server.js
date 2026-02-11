@@ -4,7 +4,6 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { testConnection } from './config/database.js';
-import { connectRedis } from './config/redis.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import eventRoutes from './routes/events.js';
@@ -13,7 +12,6 @@ import groupEventRoutes from './routes/groupEvents.js';
 import chatRoutes from './routes/chat.js';
 import groupMessageRoutes from './routes/groupMessages.js';
 import { query } from './config/database.js';
-import scheduler from './services/scheduler.js';
 
 dotenv.config();
 
@@ -87,11 +85,9 @@ httpServer.listen(PORT, async () => {
   console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
   
   await testConnection();
-  await connectRedis(); // Optional - won't crash if fails
-  scheduler.start();
+  console.log('✅ Server ready (scheduler disabled for production)');
 });
 
 process.on('SIGTERM', () => {
-  scheduler.stop();
   httpServer.close(() => process.exit(0));
 });
