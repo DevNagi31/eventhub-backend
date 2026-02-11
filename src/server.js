@@ -12,7 +12,6 @@ import groupEventRoutes from './routes/groupEvents.js';
 import chatRoutes from './routes/chat.js';
 import groupMessageRoutes from './routes/groupMessages.js';
 import { query } from './config/database.js';
-import { startWorker } from './jobs/worker.js';
 import scheduler from './services/scheduler.js';
 
 dotenv.config();
@@ -87,19 +86,10 @@ httpServer.listen(PORT, async () => {
   console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
   
   await testConnection();
-
-  // Start Faktory worker and scheduler
-  try {
-    await startWorker();
-    await scheduler.start();
-  } catch (error) {
-    console.error('⚠️  Faktory not available:', error.message);
-    console.log('   Make sure Faktory is running: brew services start faktory');
-  }
+  scheduler.start();
 });
 
-process.on('SIGTERM', async () => {
-  console.log('SIGTERM received, shutting down...');
-  await scheduler.stop();
+process.on('SIGTERM', () => {
+  scheduler.stop();
   httpServer.close(() => process.exit(0));
 });
